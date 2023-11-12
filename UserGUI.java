@@ -30,12 +30,13 @@ public class UserGUI {
     private DefaultMutableTreeNode node = new DefaultMutableTreeNode();
     private ArrayList<String> currentFollowing = new ArrayList<String>();
     private ArrayList<String> newsFeed = new ArrayList<String>();
+    private UserInformation user_info = new UserInformation();
 
     private int width;
     private int height;
 
     // Constructor initializes the layout and interactions
-    public UserGUI(DefaultMutableTreeNode n, int w, int h) {
+    public UserGUI(DefaultMutableTreeNode n, int w, int h, UserInformation us_in) {
         frame = new JFrame();
         mainPanel = new JPanel(new GridLayout(2, 1));
 
@@ -52,19 +53,25 @@ public class UserGUI {
         followUser = new JButton("Follow User");
         postTweet = new JButton("Post Tweet");
 
-        currentFollowing.add("--List of Current Followers--");
-        newsFeed.add("--List of New Tweets--");
+        // currentFollowing.add("--List of Current Followers--");
+        // newsFeed.add("--List of New Tweets--");
 
-        String cF[] = new String[currentFollowing.size()];
-        cF = currentFollowing.toArray(cF);
+        us_in.addFollowing("--List of Current Followers--");
+        us_in.addNewsFeed("--List of New Tweets--");
 
-        String nF[] = new String[newsFeed.size()];
-        nF = newsFeed.toArray(nF);
+        String cF[] = new String[user_info.getFollowing().size()];
+        cF = user_info.getFollowing().toArray(cF);
 
+        String nF[] = new String[user_info.getNewsFeed().size()];
+        nF = user_info.getNewsFeed().toArray(nF);
+
+        // instantiate it
         following = new JList<>(cF);
         tweets = new JList<>(nF);
 
         node = n;
+        user_info = us_in;
+
         width = w;
         height = h;
     }
@@ -73,6 +80,9 @@ public class UserGUI {
     public void setUpGUI() {
         frame.setSize(width, height);
         frame.setTitle("User View");
+
+        updateFollowing();
+        updateTweets();
 
         topPanelGrid.add(userID);
         topPanelGrid.add(followUser);
@@ -125,24 +135,34 @@ public class UserGUI {
     }
 
     public void addFollowers(String id) {
-        currentFollowing.add(id);
-        String cF[] = new String[currentFollowing.size()];
-        cF = currentFollowing.toArray(cF);
-
-        following.setListData(cF);
+        // currentFollowing.add(id);
+        user_info.addFollowing(id);
+        updateFollowing();
 
     }
 
     public void addTweets(String msg) {
-        newsFeed.add(msg);
-        String nF[] = new String[newsFeed.size()];
-        nF = newsFeed.toArray(nF);
-
-        tweets.setListData(nF);
+        // newsFeed.add(msg);
+        user_info.addNewsFeed(msg);
+        updateTweets();
     }
 
     public DefaultMutableTreeNode getNode() {
         return node;
+    }
+
+    public void updateFollowing() {
+        String cF[] = new String[user_info.getFollowing().size()];
+        cF = user_info.getFollowing().toArray(cF);
+
+        following.setListData(cF);
+    }
+
+    public void updateTweets() {
+        String nF[] = new String[user_info.getNewsFeed().size()];
+        nF = user_info.getNewsFeed().toArray(nF);
+
+        tweets.setListData(nF);
     }
 
 }

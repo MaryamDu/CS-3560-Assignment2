@@ -39,6 +39,7 @@ public class GUI {
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
     private AddAdmin admin = new AddAdmin();
     private ArrayList<UserGUI> userPages = new ArrayList<UserGUI>();
+    private UserInformation user_info = new UserInformation();
 
     private int width;
     private int height;
@@ -198,21 +199,34 @@ public class GUI {
     public void makeUsers() {
         TreePath path = tree.getSelectionPath();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        UserGUI userWindow = new UserGUI(node, width, height);
-        userPages.add(userWindow);
+        UserGUI userWindow = new UserGUI(node, width, height, user_info);
+        if (userPages.size() < 1) {
+            userPages.add(userWindow);
+        } else {
+            for (int i = 0; i < userPages.size(); i++) {
+                if (userPages.get(i).getNode() != node) {
+                    userPages.add(userWindow);
+                }
+            }
+        }
     }
 
     public void openUsers() {
+
+        makeUsers();
+
         TreePath path = tree.getSelectionPath();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        UserGUI userWindow = new UserGUI(node, width, height);
 
-        if (!userPages.contains(userWindow)) {
-            makeUsers();
+        int indexOfNode = 0;
+        for (int i = 0; i < userPages.size(); i++) {
+            if (userPages.get(i).getNode() == node) {
+                indexOfNode = i;
+            }
         }
 
-        userWindow.setUpGUI();
-        userWindow.SetUpButtonListeners();
+        userPages.get(indexOfNode).setUpGUI();
+        userPages.get(indexOfNode).SetUpButtonListeners();
     }
 
 }
