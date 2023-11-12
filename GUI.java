@@ -43,7 +43,7 @@ public class GUI {
     private int width;
     private int height;
 
-    DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+    DefaultMutableTreeNode root = new DefaultMutableTreeNode("**Root**");
 
     // Constructor initializes the layout and interactions
     public GUI(int w, int h) {
@@ -106,21 +106,6 @@ public class GUI {
         frame.setVisible(true);
     }
 
-    // Make the tree
-    public void setUpTree() {
-
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode cs1 = new DefaultMutableTreeNode("CS3560");
-        DefaultMutableTreeNode cs2 = new DefaultMutableTreeNode("CS3560-1");
-
-        tree = new JTree(root);
-        tree.setBounds(25, 25, 200, 200);
-
-        root.add(cs1);
-        root.add(cs2);
-
-    }
-
     // Button Interactions
     public void SetUpButtonListeners() {
         ActionListener buttonListener = new ActionListener() {
@@ -176,6 +161,7 @@ public class GUI {
 
     public void addGroup(String groupName) {
 
+        groupName = "**" + groupName + "**";
         DefaultMutableTreeNode cs = new DefaultMutableTreeNode(groupName);
         folders.add(cs);
 
@@ -202,7 +188,9 @@ public class GUI {
         if (groupNames.size() == 0) {
             root.add(users.get(0));
         } else {
-            model.insertNodeInto(cs, node, node.getChildCount());
+            if (!users.contains(node)) {
+                model.insertNodeInto(cs, node, node.getChildCount());
+            }
         }
 
     }
