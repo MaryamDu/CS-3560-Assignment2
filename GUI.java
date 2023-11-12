@@ -1,5 +1,8 @@
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -192,16 +195,15 @@ public class GUI {
     public void addUser(String userName) {
 
         DefaultMutableTreeNode cs = new DefaultMutableTreeNode(userName);
+        DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+        TreePath path = tree.getSelectionPath();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
         users.add(cs);
 
-        if (userNames.size() == 1) {
-            root.add(folders.get(0));
+        if (groupNames.size() == 0) {
+            root.add(users.get(0));
         } else {
-            for (int i = 1; i < userNames.size(); i++) {
-                DefaultMutableTreeNode cs1 = users.get(i - 1);
-                DefaultMutableTreeNode cs2 = users.get(i);
-                cs1.add(cs2);
-            }
+            model.insertNodeInto(cs, node, node.getChildCount());
         }
 
     }
