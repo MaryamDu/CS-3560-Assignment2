@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class UserGUI {
@@ -26,11 +27,15 @@ public class UserGUI {
     private JPanel bottomPanel;
     private JTree tree;
 
+    private DefaultMutableTreeNode node = new DefaultMutableTreeNode();
+    private ArrayList<String> currentFollowing = new ArrayList<String>();
+    private ArrayList<String> newsFeed = new ArrayList<String>();
+
     private int width;
     private int height;
 
     // Constructor initializes the layout and interactions
-    public UserGUI(int w, int h) {
+    public UserGUI(DefaultMutableTreeNode n, int w, int h) {
         frame = new JFrame();
         mainPanel = new JPanel(new GridLayout(2, 1));
 
@@ -47,11 +52,19 @@ public class UserGUI {
         followUser = new JButton("Follow User");
         postTweet = new JButton("Post Tweet");
 
-        String placeholder[] = { "hello", "nice", "cool" };
+        currentFollowing.add("--List of Current Followers--");
+        newsFeed.add("--List of New Tweets--");
 
-        following = new JList<>(placeholder);
-        tweets = new JList<>(placeholder);
+        String cF[] = new String[currentFollowing.size()];
+        cF = currentFollowing.toArray(cF);
 
+        String nF[] = new String[newsFeed.size()];
+        nF = newsFeed.toArray(nF);
+
+        following = new JList<>(cF);
+        tweets = new JList<>(nF);
+
+        node = n;
         width = w;
         height = h;
     }
@@ -94,11 +107,13 @@ public class UserGUI {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (ae.getSource() == followUser) {
-                    // String u_id = userID.getText();
-                    System.out.println("Click");
+                    String u_id = userID.getText();
+                    addFollowers(u_id);
                     userID.setText("");
                 } else if (ae.getSource() == postTweet) {
-                    System.out.println("Clicking");
+                    String msg = tweetMsg.getText();
+                    addTweets(msg);
+                    tweetMsg.setText("");
 
                 }
             }
@@ -107,6 +122,27 @@ public class UserGUI {
         followUser.addActionListener(buttonListener);
         postTweet.addActionListener(buttonListener);
 
+    }
+
+    public void addFollowers(String id) {
+        currentFollowing.add(id);
+        String cF[] = new String[currentFollowing.size()];
+        cF = currentFollowing.toArray(cF);
+
+        following.setListData(cF);
+
+    }
+
+    public void addTweets(String msg) {
+        newsFeed.add(msg);
+        String nF[] = new String[newsFeed.size()];
+        nF = newsFeed.toArray(nF);
+
+        tweets.setListData(nF);
+    }
+
+    public DefaultMutableTreeNode getNode() {
+        return node;
     }
 
 }
