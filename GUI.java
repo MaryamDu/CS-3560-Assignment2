@@ -9,6 +9,7 @@ public class GUI {
 
     private JFrame frame;
 
+    // Interactions
     private JTextField userID;
     private JTextField groupID;
     private JButton userButton;
@@ -18,18 +19,29 @@ public class GUI {
     private JButton msgTotal;
     private JButton groupTotal;
     private JButton posperc;
-    private JButton placeHolder;
 
+    // Layout
     private JPanel mainPanel;
     private JPanel rightPanel;
+    private JPanel topPanel;
+    private JPanel topPanelCont;
+    private JPanel middlePanel;
+    private JPanel bottomPanel;
     private JTree tree;
+
     private int width;
     private int height;
 
+    // Constructor initializes the layout and interactions
     public GUI(int w, int h) {
         frame = new JFrame();
         mainPanel = new JPanel(new GridLayout(1, 2));
-        rightPanel = new JPanel(new GridLayout(5, 2));
+        rightPanel = new JPanel(new BorderLayout());
+        topPanel = new JPanel(new GridLayout(2, 1));
+        topPanelCont = new JPanel(new GridLayout(2, 2));
+        middlePanel = new JPanel(new FlowLayout());
+        bottomPanel = new JPanel(new GridLayout(2, 2));
+
         setUpTree();
 
         userID = new JTextField(10);
@@ -41,37 +53,44 @@ public class GUI {
         msgTotal = new JButton("Show Total Messages");
         groupTotal = new JButton("Show Total Groups");
         posperc = new JButton("Show Positive Percentage");
-        placeHolder = new JButton("Blank");
 
         width = w;
         height = h;
     }
 
+    // Separate the GUI by its panels
     public void setUpGUI() {
         frame.setSize(width, height);
-        frame.setTitle("Demo");
+        frame.setTitle("Admin View");
 
-        rightPanel.add(userID);
-        rightPanel.add(userButton);
-        rightPanel.add(groupID);
-        rightPanel.add(groupButton);
-        rightPanel.add(userView);
-        rightPanel.add(userTotal);
-        rightPanel.add(msgTotal);
-        rightPanel.add(groupTotal);
-        rightPanel.add(posperc);
-        rightPanel.add(placeHolder);
+        topPanelCont.add(userID);
+        topPanelCont.add(userButton);
+        topPanelCont.add(groupID);
+        topPanelCont.add(groupButton);
+
+        middlePanel.add(userView);
+
+        topPanel.add(topPanelCont);
+        topPanel.add(middlePanel);
+
+        bottomPanel.add(userTotal);
+        bottomPanel.add(msgTotal);
+        bottomPanel.add(groupTotal);
+        bottomPanel.add(posperc);
+
+        rightPanel.add(topPanel, BorderLayout.NORTH);
+        rightPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         mainPanel.add(tree);
         mainPanel.add(rightPanel);
 
         frame.add(mainPanel);
-        // frame.add(rightPanel);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
+    // Make the tree
     public void setUpTree() {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
@@ -86,6 +105,7 @@ public class GUI {
 
     }
 
+    // Button Interactions
     public void SetUpButtonListeners() {
         ActionListener buttonListener = new ActionListener() {
             @Override
@@ -97,12 +117,21 @@ public class GUI {
                 } else if (ae.getSource() == groupButton) {
                     System.out.println("Clicking");
 
+                } else if (ae.getSource() == userView) {
+                    UserGUI userWindow = new UserGUI(width, height);
+                    userWindow.setUpGUI();
+                    userWindow.SetUpButtonListeners();
                 }
             }
         };
 
         userButton.addActionListener(buttonListener);
         groupButton.addActionListener(buttonListener);
+        userView.addActionListener(buttonListener);
+        userTotal.addActionListener(buttonListener);
+        msgTotal.addActionListener(buttonListener);
+        groupTotal.addActionListener(buttonListener);
+        posperc.addActionListener(buttonListener);
     }
 
 }
