@@ -30,7 +30,7 @@ public class UserGUI {
     private DefaultMutableTreeNode node = new DefaultMutableTreeNode();
     private ArrayList<String> currentFollowing = new ArrayList<String>();
     private ArrayList<String> newsFeed = new ArrayList<String>();
-    private UserInformation user_info = new UserInformation();
+    private UserInformation user_info = UserInformation.getInstance();
 
     private int width;
     private int height;
@@ -69,11 +69,13 @@ public class UserGUI {
         following = new JList<>(cF);
         tweets = new JList<>(nF);
 
-        node = n;
-        user_info = us_in;
+        this.node = n;
+        this.user_info = us_in;
 
         width = w;
         height = h;
+
+        System.out.println("New user window made: " + node + " " + user_info);
     }
 
     // Separate the GUI by its panels

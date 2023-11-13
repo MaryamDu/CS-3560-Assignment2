@@ -39,7 +39,7 @@ public class GUI {
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
     private AddAdmin admin = new AddAdmin();
     private ArrayList<UserGUI> userPages = new ArrayList<UserGUI>();
-    private UserInformation user_info = new UserInformation();
+    private UserInformation user_info = UserInformation.getInstance();
 
     private int width;
     private int height;
@@ -199,14 +199,22 @@ public class GUI {
     public void makeUsers() {
         TreePath path = tree.getSelectionPath();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        UserGUI userWindow = new UserGUI(node, width, height, user_info);
+        UserGUI userWindow = new UserGUI(node, width, height, this.user_info);
+        boolean flag = false;
         if (userPages.size() < 1) {
             userPages.add(userWindow);
         } else {
+            // if the current node selected doesn't have a new window, make a new window
             for (int i = 0; i < userPages.size(); i++) {
                 if (userPages.get(i).getNode() != node) {
-                    userPages.add(userWindow);
+                    flag = true;
+                } else {
+                    flag = false;
+                    break;
                 }
+            }
+            if (flag) {
+                userPages.add(userWindow);
             }
         }
     }
