@@ -1,6 +1,12 @@
 import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+/*
+ * The user (node's) information is saved with their node, 
+ * current following, and news feed outside of the user gui 
+ * so it isn't deprecated when the user gui is disposed.
+ */
+
 public class UserInformation {
 
     private ArrayList<String> currentFollowing = new ArrayList<String>();

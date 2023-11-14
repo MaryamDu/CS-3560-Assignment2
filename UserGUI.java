@@ -3,6 +3,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 
 public class UserGUI {
@@ -32,8 +33,8 @@ public class UserGUI {
     private ArrayList<String> newsFeed = new ArrayList<String>();
     private ArrayList<UserInformation> user_info = new ArrayList<UserInformation>();
 
-    private AddAdmin admin = new AddAdmin();
     private SetUsers setUp;
+    private ArrayList<String> userNames = new ArrayList<String>();
     private int index = 0;
 
     private int width;
@@ -57,6 +58,8 @@ public class UserGUI {
         followUser = new JButton("Follow User");
         postTweet = new JButton("Post Tweet");
 
+        // Get the specific information of the selected node
+
         this.node = n;
 
         setUp = su;
@@ -65,13 +68,17 @@ public class UserGUI {
         user_info = setUp.getUserInformation();
         instantiateJList();
 
+        userNames = GUI.getUserNames();
+
         width = w;
         height = h;
 
-        System.out.println("New user window made: " + node + " " + user_info);
     }
 
     // Separate the GUI by its panels
+    /*
+     * Layout combines grid layouts and border layouts.
+     */
     public void setUpGUI() {
         frame.setSize(width, height);
         frame.setTitle("User View");
@@ -129,8 +136,8 @@ public class UserGUI {
 
     }
 
+    // Add followers to the selected node's list then update the lists
     public void addFollowers(String id) {
-        // currentFollowing.add(id);
 
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
@@ -139,13 +146,20 @@ public class UserGUI {
             }
         }
 
-        user_info.get(index).addFollowing(id);
-        updateFollowing();
+        for (int i = 0; i < userNames.size(); i++) {
+            if (userNames.get(i).equals(id)) {
+                user_info.get(index).addFollowing(id);
+            } else {
+                System.out.println("Username doesn't exist");
+            }
+        }
 
+        updateFollowing();
+        updateTweets();
     }
 
+    // Add messages to the selected nodes feed and anyone they follow
     public void addTweets(String msg) {
-        // newsFeed.add(msg);
 
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
@@ -154,7 +168,14 @@ public class UserGUI {
             }
         }
 
-        user_info.get(index).addNewsFeed(msg);
+        AddAdmin.addMsgs();
+
+        if (msg.contains("good") || msg.contains("great") || msg.contains("cool") || msg.contains("excellent")
+                || msg.contains("awesome")) {
+            AddAdmin.updatePercentage();
+        }
+
+        user_info.get(index).addNewsFeed(userNames.get(index) + ": \"" + msg + "\"");
         updateTweets();
     }
 
@@ -167,6 +188,24 @@ public class UserGUI {
                 break;
             }
         }
+
+        // Checks if the username is followed by the current node then adds
+        // their feed to the node's feed
+        for (int i = 0; i < user_info.size(); i++) {
+            for (int j = 0; j < user_info.get(index).getFollowing().size(); j++) {
+                if (userNames.get(i).equals(user_info.get(index).getFollowing().get(j))) {
+                    String NF[] = new String[user_info.get(index).getNewsFeed().size()];
+                    NF = user_info.get(index).getNewsFeed().toArray(NF);
+                    for (int k = 1; k < NF.length; k++) {
+                        if (!user_info.get(i).getNewsFeed().get(k).equals(NF[k])) {
+                            user_info.get(i).addNewsFeed(NF[k]);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update List
 
         String cF[] = new String[user_info.get(index).getFollowing().size()];
         cF = user_info.get(index).getFollowing().toArray(cF);
@@ -182,6 +221,8 @@ public class UserGUI {
                 break;
             }
         }
+
+        // Update List
 
         String nF[] = new String[user_info.get(index).getNewsFeed().size()];
         nF = user_info.get(index).getNewsFeed().toArray(nF);

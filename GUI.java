@@ -33,8 +33,9 @@ public class GUI {
     private JPanel bottomPanel;
     private JTree tree;
 
+    // Arraylists to handle added information
     private ArrayList<String> groupNames = new ArrayList<String>();
-    private ArrayList<String> userNames = new ArrayList<String>();
+    private static ArrayList<String> userNames = new ArrayList<String>();
     private ArrayList<DefaultMutableTreeNode> folders = new ArrayList<DefaultMutableTreeNode>();
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
     private AddAdmin admin = new AddAdmin();
@@ -56,8 +57,6 @@ public class GUI {
         middlePanel = new JPanel(new FlowLayout());
         bottomPanel = new JPanel(new GridLayout(2, 2));
 
-        // setUpTree();
-        // DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
         tree = new JTree(root);
         tree.setBounds(25, 25, 200, 200);
 
@@ -76,6 +75,13 @@ public class GUI {
     }
 
     // Separate the GUI by its panels
+    /*
+     * It's separated by 5 panels which combine into the
+     * main panel. The tree is its own panel while the
+     * right panel is comprised of two grid layouts and a
+     * flow layout, which are combined into a border layout
+     * and then are combined into the right panel.
+     */
     public void setUpGUI() {
         frame.setSize(width, height);
         frame.setTitle("Admin View");
@@ -147,6 +153,21 @@ public class GUI {
                     d.add(l);
                     d.setSize(100, 100);
                     d.setVisible(true);
+                } else if (ae.getSource() == msgTotal) {
+                    // show message total
+                    JDialog d = new JDialog(frame, "Total Messages");
+                    JLabel l = new JLabel(String.valueOf(admin.getMsgs()));
+                    d.add(l);
+                    d.setSize(100, 100);
+                    d.setVisible(true);
+                } else if (ae.getSource() == posperc) {
+                    // show positive precentage
+                    AddAdmin.calculateAverage();
+                    JDialog d = new JDialog(frame, "Positive Percentage");
+                    JLabel l = new JLabel(String.valueOf(admin.getAvg()));
+                    d.add(l);
+                    d.setSize(100, 100);
+                    d.setVisible(true);
                 }
             }
         };
@@ -160,6 +181,7 @@ public class GUI {
         posperc.addActionListener(buttonListener);
     }
 
+    // Add a group to the tree
     public void addGroup(String groupName) {
 
         groupName = "**" + groupName + "**";
@@ -178,6 +200,7 @@ public class GUI {
 
     }
 
+    // Add a user to the tree if a group is selected
     public void addUser(String userName) {
 
         DefaultMutableTreeNode cs = new DefaultMutableTreeNode(userName);
@@ -196,6 +219,7 @@ public class GUI {
 
     }
 
+    // Open the user view
     public void openUsers() {
 
         TreePath path = tree.getSelectionPath();
@@ -204,6 +228,10 @@ public class GUI {
 
         userPages.setUpGUI();
         userPages.SetUpButtonListeners();
+    }
+
+    public static ArrayList<String> getUserNames() {
+        return userNames;
     }
 
 }
