@@ -146,11 +146,10 @@ public class UserGUI {
             }
         }
 
+        // Only adds to the list if the node exists
         for (int i = 0; i < userNames.size(); i++) {
             if (userNames.get(i).equals(id)) {
                 user_info.get(index).addFollowing(id);
-            } else {
-                System.out.println("Username doesn't exist");
             }
         }
 
@@ -223,7 +222,6 @@ public class UserGUI {
         }
 
         // Update List
-
         String nF[] = new String[user_info.get(index).getNewsFeed().size()];
         nF = user_info.get(index).getNewsFeed().toArray(nF);
 
