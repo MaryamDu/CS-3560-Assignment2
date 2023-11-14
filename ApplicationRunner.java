@@ -5,7 +5,7 @@ public class ApplicationRunner {
         // Instantiates and makes the gui which starts from
         // the admin page.
 
-        GUI gui = new GUI(750, 480);
+        GUI gui = GUI.getInstance();
         gui.setUpGUI();
         gui.SetUpButtonListeners();
 

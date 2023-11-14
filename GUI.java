@@ -47,6 +47,8 @@ public class GUI {
 
     DefaultMutableTreeNode root = new DefaultMutableTreeNode("**Root**");
 
+    private static GUI instance = null;
+
     // Constructor initializes the layout and interactions
     public GUI(int w, int h) {
         frame = new JFrame();
@@ -232,6 +234,13 @@ public class GUI {
 
     public static ArrayList<String> getUserNames() {
         return userNames;
+    }
+
+    public static GUI getInstance() {
+        if (instance == null) {
+            instance = new GUI(750, 480);
+        }
+        return instance;
     }
 
 }
