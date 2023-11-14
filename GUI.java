@@ -39,6 +39,7 @@ public class GUI {
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
     private AddAdmin admin = new AddAdmin();
     private UserGUI userPages;
+    private SetUsers setUp = new SetUsers();
 
     private int width;
     private int height;
@@ -199,7 +200,7 @@ public class GUI {
 
         TreePath path = tree.getSelectionPath();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        userPages = new UserGUI(node, width, height);
+        userPages = new UserGUI(node, width, height, setUp);
 
         userPages.setUpGUI();
         userPages.SetUpButtonListeners();

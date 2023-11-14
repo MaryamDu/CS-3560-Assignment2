@@ -33,12 +33,14 @@ public class UserGUI {
     private ArrayList<UserInformation> user_info = new ArrayList<UserInformation>();
 
     private AddAdmin admin = new AddAdmin();
+    private SetUsers setUp;
+    private int index = 0;
 
     private int width;
     private int height;
 
     // Constructor initializes the layout and interactions
-    public UserGUI(DefaultMutableTreeNode n, int w, int h) {
+    public UserGUI(DefaultMutableTreeNode n, int w, int h, SetUsers su) {
         frame = new JFrame();
         mainPanel = new JPanel(new GridLayout(2, 1));
 
@@ -57,7 +59,11 @@ public class UserGUI {
 
         this.node = n;
 
-        setUserInfo();
+        setUp = su;
+
+        index = setUp.setUserInfo(node, currentFollowing, newsFeed);
+        user_info = setUp.getUserInformation();
+        instantiateJList();
 
         width = w;
         height = h;
@@ -126,7 +132,6 @@ public class UserGUI {
     public void addFollowers(String id) {
         // currentFollowing.add(id);
 
-        int index = 0;
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
                 index = i;
@@ -142,7 +147,6 @@ public class UserGUI {
     public void addTweets(String msg) {
         // newsFeed.add(msg);
 
-        int index = 0;
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
                 index = i;
@@ -157,7 +161,6 @@ public class UserGUI {
     // updates ONLY the specified node
     public void updateFollowing() {
 
-        int index = 0;
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
                 index = i;
@@ -173,7 +176,6 @@ public class UserGUI {
 
     public void updateTweets() {
 
-        int index = 0;
         for (int i = 0; i < user_info.size(); i++) {
             if (user_info.get(i).getNode() == node) {
                 index = i;
@@ -187,42 +189,7 @@ public class UserGUI {
         tweets.setListData(nF);
     }
 
-    public void setUserInfo() {
-
-        UserInformation us_in = new UserInformation(node, newsFeed, currentFollowing);
-        boolean flag = false;
-        int index = 0;
-
-        // if the current node selected DOESNT have information, make a new instance
-        // if there isnt any information, add the user by default
-        if (user_info.size() < 1) {
-            us_in.addFollowing("--List of Current Followers--");
-            us_in.addNewsFeed("--List of New Tweets--");
-            user_info.add(us_in);
-            System.out.println("Size is: " + user_info.size());
-        } else {
-            for (int i = 0; i < user_info.size(); i++) {
-                if (user_info.get(i).getNode() != node) {
-                    flag = true;
-                    System.out.println(user_info.get(i).getNode() + " is not equal to " + node);
-                } else {
-                    flag = false;
-                    index = i;
-                    System.out.println(user_info.get(i).getNode() + " is equal to " + node);
-                    break;
-                }
-            }
-        }
-
-        // add the user if they don't have information registered
-        if (flag) {
-
-            us_in.addFollowing("--List of Current Followers--");
-            us_in.addNewsFeed("--List of New Tweets--");
-
-            user_info.add(us_in);
-            index = user_info.indexOf(us_in);
-        }
+    public void instantiateJList() {
 
         // get the information of the clicked on user to make the JList
         String cF[] = new String[user_info.get(index).getFollowing().size()];
