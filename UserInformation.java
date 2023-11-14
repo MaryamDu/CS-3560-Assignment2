@@ -1,15 +1,16 @@
 import java.util.ArrayList;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class UserInformation {
+
     private ArrayList<String> currentFollowing = new ArrayList<String>();
     private ArrayList<String> newsFeed = new ArrayList<String>();
-    private static final UserInformation userinfo = new UserInformation();
+    private DefaultMutableTreeNode node = new DefaultMutableTreeNode();
 
-    public UserInformation() {
-    }
-
-    public UserInformation(ArrayList<String> CF, ArrayList<String> NF) {
-
+    public UserInformation(DefaultMutableTreeNode n, ArrayList<String> CF, ArrayList<String> NF) {
+        node = n;
+        currentFollowing = CF;
+        newsFeed = NF;
     }
 
     public void addFollowing(String text) {
@@ -28,7 +29,8 @@ public class UserInformation {
         return this.newsFeed;
     }
 
-    public static UserInformation getInstance() {
-        return userinfo;
+    public DefaultMutableTreeNode getNode() {
+        return this.node;
     }
+
 }

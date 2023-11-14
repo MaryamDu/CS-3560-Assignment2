@@ -38,8 +38,7 @@ public class GUI {
     private ArrayList<DefaultMutableTreeNode> folders = new ArrayList<DefaultMutableTreeNode>();
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
     private AddAdmin admin = new AddAdmin();
-    private ArrayList<UserGUI> userPages = new ArrayList<UserGUI>();
-    private UserInformation user_info = UserInformation.getInstance();
+    private UserGUI userPages;
 
     private int width;
     private int height;
@@ -196,45 +195,14 @@ public class GUI {
 
     }
 
-    public void makeUsers() {
-        TreePath path = tree.getSelectionPath();
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        UserGUI userWindow = new UserGUI(node, width, height, this.user_info);
-        boolean flag = false;
-        if (userPages.size() < 1) {
-            userPages.add(userWindow);
-        } else {
-            // if the current node selected doesn't have a new window, make a new window
-            for (int i = 0; i < userPages.size(); i++) {
-                if (userPages.get(i).getNode() != node) {
-                    flag = true;
-                } else {
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                userPages.add(userWindow);
-            }
-        }
-    }
-
     public void openUsers() {
 
-        makeUsers();
-
         TreePath path = tree.getSelectionPath();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        userPages = new UserGUI(node, width, height);
 
-        int indexOfNode = 0;
-        for (int i = 0; i < userPages.size(); i++) {
-            if (userPages.get(i).getNode() == node) {
-                indexOfNode = i;
-            }
-        }
-
-        userPages.get(indexOfNode).setUpGUI();
-        userPages.get(indexOfNode).SetUpButtonListeners();
+        userPages.setUpGUI();
+        userPages.SetUpButtonListeners();
     }
 
 }
