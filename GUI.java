@@ -23,6 +23,8 @@ public class GUI {
     private JButton msgTotal;
     private JButton groupTotal;
     private JButton posperc;
+    private JButton validIDs;
+    private JButton lastUpdate;
 
     // Layout
     private JPanel mainPanel;
@@ -31,6 +33,7 @@ public class GUI {
     private JPanel topPanelCont;
     private JPanel middlePanel;
     private JPanel bottomPanel;
+    private JPanel centerPanel;
     private JTree tree;
 
     // Arraylists to handle added information
@@ -38,6 +41,9 @@ public class GUI {
     private static ArrayList<String> userNames = new ArrayList<String>();
     private ArrayList<DefaultMutableTreeNode> folders = new ArrayList<DefaultMutableTreeNode>();
     private ArrayList<DefaultMutableTreeNode> users = new ArrayList<DefaultMutableTreeNode>();
+    private ArrayList<Long> userTimes = new ArrayList<Long>();
+    private ArrayList<Long> groupTimes = new ArrayList<Long>();
+    public static ArrayList<Long> userUpdateTime = new ArrayList<Long>();
     private AddAdmin admin = new AddAdmin();
     private UserGUI userPages;
     private SetUsers setUp = new SetUsers();
@@ -58,6 +64,7 @@ public class GUI {
         topPanelCont = new JPanel(new GridLayout(2, 2));
         middlePanel = new JPanel(new FlowLayout());
         bottomPanel = new JPanel(new GridLayout(2, 2));
+        centerPanel = new JPanel(new GridLayout(1, 2));
 
         tree = new JTree(root);
         tree.setBounds(25, 25, 200, 200);
@@ -71,6 +78,9 @@ public class GUI {
         msgTotal = new JButton("Show Total Messages");
         groupTotal = new JButton("Show Total Groups");
         posperc = new JButton("Show Positive Percentage");
+
+        validIDs = new JButton("Show Validation");
+        lastUpdate = new JButton("Show Last Update");
 
         width = w;
         height = h;
@@ -103,8 +113,12 @@ public class GUI {
         bottomPanel.add(msgTotal);
         bottomPanel.add(posperc);
 
+        centerPanel.add(validIDs);
+        centerPanel.add(lastUpdate);
+
         rightPanel.add(topPanel, BorderLayout.NORTH);
         rightPanel.add(bottomPanel, BorderLayout.SOUTH);
+        rightPanel.add(centerPanel, BorderLayout.CENTER);
 
         mainPanel.add(tree);
         mainPanel.add(rightPanel);
@@ -170,6 +184,29 @@ public class GUI {
                     d.add(l);
                     d.setSize(100, 100);
                     d.setVisible(true);
+                } else if (ae.getSource() == validIDs) {
+                    // show if all IDs are valid
+                    JDialog d = new JDialog(frame, "Valid users");
+                    boolean flag = checkValidIDs();
+                    JLabel l;
+                    if (flag) {
+                        l = new JLabel("All User and Group names are valid.");
+                    } else {
+                        l = new JLabel(
+                                "Not all User and Group names are valid. Please do not include duplicates or spaces.");
+                    }
+                    d.add(l);
+                    d.setSize(600, 100);
+                    d.setVisible(true);
+                } else if (ae.getSource() == lastUpdate) {
+                    // show last updated user
+                    int index = checkLastUser();
+                    JDialog d = new JDialog(frame, "Last User Update");
+                    JLabel l = new JLabel(
+                            "Last user update was made by: " + userNames.get(index) + ".");
+                    d.add(l);
+                    d.setSize(600, 100);
+                    d.setVisible(true);
                 }
             }
         };
@@ -181,6 +218,8 @@ public class GUI {
         msgTotal.addActionListener(buttonListener);
         groupTotal.addActionListener(buttonListener);
         posperc.addActionListener(buttonListener);
+        validIDs.addActionListener(buttonListener);
+        lastUpdate.addActionListener(buttonListener);
     }
 
     // Add a group to the tree
@@ -199,6 +238,11 @@ public class GUI {
                 cs1.add(cs2);
             }
         }
+
+        Long creationTime = System.currentTimeMillis();
+        groupTimes.add(creationTime);
+
+        System.out.println("New group made at: " + creationTime + " ms.");
 
     }
 
@@ -219,6 +263,11 @@ public class GUI {
             }
         }
 
+        Long creationTime = System.currentTimeMillis();
+        userTimes.add(creationTime);
+        userUpdateTime.add(creationTime);
+
+        System.out.println("New user made at: " + creationTime + " ms.");
     }
 
     // Open the user view
@@ -241,6 +290,55 @@ public class GUI {
             instance = new GUI(750, 480);
         }
         return instance;
+    }
+
+    public boolean checkValidIDs() {
+        boolean flag = true;
+
+        // check for spaces then check if it matches any other user names
+        for (int i = 0; i < userNames.size(); i++) {
+            if (userNames.get(i).contains(" ")) {
+                flag = false;
+            }
+            if (flag == false) {
+                break;
+            }
+            for (int j = 0; j < userNames.size(); j++) {
+                if (i != j && userNames.get(i).equals(userNames.get(j))) {
+                    flag = false;
+                    break;
+                }
+            }
+        }
+
+        // check for spaces then check if it matches any other group names
+        for (int i = 0; i < groupNames.size(); i++) {
+            if (groupNames.get(i).contains(" ")) {
+                flag = false;
+            }
+            if (flag == false) {
+                break;
+            }
+            for (int j = 0; j < groupNames.size(); j++) {
+                if (i != j && groupNames.get(i).equals(groupNames.get(j))) {
+                    flag = false;
+                }
+            }
+        }
+
+        return flag;
+    }
+
+    public int checkLastUser() {
+        long max = 0;
+        int index = 0;
+        for (int i = 0; i < userUpdateTime.size(); i++) {
+            if (userUpdateTime.get(i) > max) {
+                max = userUpdateTime.get(i);
+                index = i;
+            }
+        }
+        return index;
     }
 
 }

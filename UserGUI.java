@@ -146,6 +146,11 @@ public class UserGUI {
             }
         }
 
+        // set last updated user
+        Long updateTime = System.currentTimeMillis();
+        GUI.userUpdateTime.set(index, updateTime);
+        AddAdmin.setlastUser(userNames.get(index));
+
         // Only adds to the list if the node exists
         for (int i = 0; i < userNames.size(); i++) {
             if (userNames.get(i).equals(id)) {
@@ -167,6 +172,9 @@ public class UserGUI {
             }
         }
 
+        Long updateTime = System.currentTimeMillis();
+        GUI.userUpdateTime.set(index, updateTime);
+        AddAdmin.setlastUser(userNames.get(index));
         AddAdmin.addMsgs();
 
         if (msg.contains("good") || msg.contains("great") || msg.contains("cool") || msg.contains("excellent")
@@ -187,6 +195,10 @@ public class UserGUI {
                 break;
             }
         }
+
+        Long updateTime = System.currentTimeMillis();
+        GUI.userUpdateTime.set(index, updateTime);
+        AddAdmin.setlastUser(userNames.get(index));
 
         // Checks if the username is followed by the current node then adds
         // their feed to the node's feed
@@ -210,6 +222,8 @@ public class UserGUI {
         cF = user_info.get(index).getFollowing().toArray(cF);
 
         following.setListData(cF);
+
+        System.out.println("Last update time: " + updateTime + " ms.");
     }
 
     public void updateTweets() {
@@ -221,11 +235,18 @@ public class UserGUI {
             }
         }
 
+        Long updateTime = System.currentTimeMillis();
+        GUI.userUpdateTime.set(index, updateTime);
+        AddAdmin.setlastUser(userNames.get(index));
+
         // Update List
         String nF[] = new String[user_info.get(index).getNewsFeed().size()];
         nF = user_info.get(index).getNewsFeed().toArray(nF);
 
         tweets.setListData(nF);
+
+        System.out.println("Last update time: " + updateTime + " ms.");
+
     }
 
     public void instantiateJList() {

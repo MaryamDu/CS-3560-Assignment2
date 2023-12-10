@@ -6,6 +6,7 @@ public class AddAdmin {
     public static int msgTotal = 0;
     public static int percentage = 0;
     public static float average = 0;
+    public static String lastUser = "";
 
     public void addGroupNum() {
         groupTotal++;
@@ -28,6 +29,10 @@ public class AddAdmin {
         average = (float) percentage / (float) msgTotal;
     }
 
+    public static void setlastUser(String name) {
+        lastUser = name;
+    }
+
     public int getUserT() {
         return userTotal;
     }
@@ -46,6 +51,10 @@ public class AddAdmin {
 
     public float getAvg() {
         return average;
+    }
+
+    public String getLastUser() {
+        return lastUser;
     }
 
 }
